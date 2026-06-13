@@ -40,6 +40,22 @@ def list_available_rooms(db: Session) -> list[Room]:
     return db.query(Room).filter(Room.is_available.is_(True)).all()
 
 
+def list_rooms(db: Session) -> list[Room]:
+    return db.query(Room).order_by(Room.id.asc()).all()
+
+
+def create_room(db: Session, number: str, room_type: RoomType, capacity: int, description: str | None = None) -> Room:
+    room = Room(number=number, room_type=room_type, capacity=capacity, description=description)
+    db.add(room)
+    db.commit()
+    db.refresh(room)
+    return room
+
+
+def get_room_application(db: Session, application_id: int) -> RoomApplication | None:
+    return db.query(RoomApplication).filter(RoomApplication.id == application_id).first()
+
+
 def create_maintenance_request(db: Session, student_id: int, title: str, description: str) -> MaintenanceRequest:
     request = MaintenanceRequest(student_id=student_id, title=title, description=description)
     db.add(request)

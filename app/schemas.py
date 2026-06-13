@@ -48,6 +48,13 @@ class RoomApplicationCreate(BaseModel):
     notes: str | None = None
 
 
+class RoomCreate(BaseModel):
+    number: str = Field(..., max_length=32)
+    room_type: str
+    capacity: int = Field(..., gt=0)
+    description: str | None = None
+
+
 class RoomBase(BaseModel):
     id: int
     number: str

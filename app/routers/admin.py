@@ -10,6 +10,7 @@ from app.schemas import (
     PaymentOut,
     RoomApplicationOut,
     RoomBase,
+    RoomCreate,
 )
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
@@ -34,8 +35,14 @@ def list_rooms(current_user=Depends(get_current_active_admin), db: Session = Dep
 
 
 @router.post("/rooms", response_model=RoomBase)
-def create_room(current_user=Depends(get_current_active_admin), db: Session = Depends(get_db), room_in: RoomBase = Depends()):
-    return crud.create_room(db, number=room_in.number, room_type=RoomType(room_in.room_type), capacity=room_in.capacity, description=room_in.description)
+def create_room(current_user=Depends(get_current_active_admin), db: Session = Depends(get_db), room_in: RoomCreate = None):
+    return crud.create_room(
+        db,
+        number=room_in.number,
+        room_type=RoomType(room_in.room_type),
+        capacity=room_in.capacity,
+        description=room_in.description,
+    )
 
 
 @router.get("/maintenance", response_model=list[MaintenanceRequestOut])
